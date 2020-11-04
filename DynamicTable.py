@@ -5,18 +5,33 @@ class DynamicTable:
         self.trace = []
         self.score = None
 
-    def initTable(self, seq1, seq2):
-        for i in range(len(seq2) + 1):
-            newRow = [0] * (len(seq1) + 1)
-            newTraceRow = [''] * (len(seq1) + 1)
-            self.trace.append(newTraceRow)
-            self.values.append(newRow)
+    def initTable(self, seq1, seq2, banded):
+        if not banded:
+            for i in range(len(seq2) + 1):
+                newRow = [0] * (len(seq1) + 1)
+                newTraceRow = [''] * (len(seq1) + 1)
+                self.trace.append(newTraceRow)
+                self.values.append(newRow)
 
-        self.x = (len(seq1) + 1)
-        self.y = (len(seq2) + 1)
-        self.top = seq1
-        self.left = seq2
-        self.fillTable()
+            self.x = (len(seq1) + 1)
+            self.y = (len(seq2) + 1)
+            self.top = seq1
+            self.left = seq2
+            self.fillTable()
+        
+        else:
+            for i in range(len(seq2) + 1):
+                newRow = [float('inf')] * 7
+                newTraceRow = [''] * 7
+
+                self.values.append(newRow)
+                self.trace.append(newTraceRow)
+
+            self.x = (len(seq1) + 1)
+            self.y = (len(seq2) + 1)
+            self.top = seq1
+            self.left = seq2
+            self.fillBanded()
 
     def fillTable(self):
         for i in range(1, self.x):
@@ -52,6 +67,40 @@ class DynamicTable:
                 else: 
                     self.values[i][j] = diagonalValue
                     self.trace[i][j] = 'D'
+
+    def fillBanded(self):
+        for i in range(0, 4):
+            self.values[i][0] = i * 5
+            self.values[0][i] = i * 5
+
+        xOffset = 0
+        xEnd = 4
+
+        for i in range(1, self.y):
+            
+            xStart = 1 if xOffset == 0 else 0
+
+            for j in range(xStart, xEnd):
+
+                top = self.values[i-1][j]
+                left = self.values[i][j-1]
+                dia = self.values[i-1][j-1]
+
+                leftValue = left + 5
+                topValue = top + 5
+                diagonalValue = dia + 1
+
+                xLetterIdx = i + xOffset - 1
+
+                xLetter = self.top[xLetterIdx]
+                yLetter = self.left[i-1]
+                
+                if yLetter == xLetter:
+                    diagonalValue = dia - 3
+
+            if  xEnd < 7:
+                xEnd = xEnd + 1
+            
 
     def getScore(self):
         return self.values[self.y - 1][self.x - 1]

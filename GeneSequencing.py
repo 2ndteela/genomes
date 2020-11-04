@@ -38,7 +38,8 @@ class GeneSequencing:
 		sub2 = seq2[0:align_length]
 
 		table = DynamicTable()
-		table.initTable(sub1, sub2)
+
+		table.initTable(sub1, sub2, banded)
 		alignments = table.getTraces()
 
 ###################################################################################################
