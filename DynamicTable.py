@@ -14,18 +14,18 @@ class DynamicTable:
 
         self.x = (len(seq1) + 1)
         self.y = (len(seq2) + 1)
-        self.one = seq1
-        self.two = seq2
+        self.top = seq1
+        self.left = seq2
         self.fillTable()
 
     def fillTable(self):
         for i in range(1, self.x):
             self.values[0][i] = i * 5
-            self.trace[0][i] = self.one[i-1]
+            self.trace[0][i] = self.top[i-1]
 
         for i in range(1, self.y):
             self.values[i][0] = i * 5
-            self.trace[i][0] = self.two[i-1]
+            self.trace[i][0] = self.left[i-1]
 
         for i in range(1, self.y):
             for j in range(1, self.x):
@@ -38,7 +38,7 @@ class DynamicTable:
                 topValue = top + 5
                 diagonalValue = dia + 1
 
-                if self.two[i-1] == self.one[j-1]:
+                if self.left[i-1] == self.top[j-1]:
                     diagonalValue = dia - 3
                 
                 if leftValue <= diagonalValue and leftValue <= topValue:
@@ -59,16 +59,45 @@ class DynamicTable:
     def getTraces(self):
         
         current = self.trace[self.y - 1][self.x - 1]
-        currentTop = self.y - 1
-        currentLeft = self.x - 1
+        currentY = self.y - 1
+        currentX = self.x - 1
+        stringPosX = currentX - 1
+        stringPosY = currentY - 1
         goAgain = True
 
-        string1 = ''
-        string2 = ''
+        topString = '' 
+        leftString = ''
 
-        return ''
+        while goAgain:
+            if current == 'D':
+                topString = self.top[stringPosX] + topString 
+                leftString = self.left[stringPosY] + leftString
+                currentY = currentY - 1
+                currentX = currentX - 1
+                stringPosX = stringPosX - 1
+                stringPosY = stringPosY - 1
 
-        # while goAgain:
+            elif current == 'L':
+                leftString = '-' + leftString
+                topString = self.top[stringPosX] + topString
+                currentX = currentX - 1
+                stringPosX = stringPosX - 1
+
+            elif current == 'T':
+                topString = '-' + topString
+                leftString = self.left[stringPosY] + leftString
+                currentY = currentY - 1
+                stringPosY = stringPosY - 1
+
+            else:
+                goAgain = False
+            
+            current = self.trace[currentY][currentX]
+
+        top = topString[0:100] 
+        left = leftString[0:100]
+
+        return(top, left)
 
 
         

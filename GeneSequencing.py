@@ -39,12 +39,13 @@ class GeneSequencing:
 
 		table = DynamicTable()
 		table.initTable(sub1, sub2)
+		alignments = table.getTraces()
 
 ###################################################################################################
 # your code should replace these three statements and populate the three variables: score, alignment1 and alignment2
 		score = table.getScore()
-		alignment1 = 'abc-easy  DEBUG:({} chars,align_len={}{})'.format(len(seq1), align_length, ',BANDED' if banded else '')
-		alignment2 = 'as-123--  DEBUG:({} chars,align_len={}{})'.format(len(seq2), align_length, ',BANDED' if banded else '')
+		alignment1 = '{}  DEBUG:({} chars,align_len={}{})'.format(alignments[0], len(seq1), align_length, ',BANDED' if banded else '')
+		alignment2 = '{}  DEBUG:({} chars,align_len={}{})'.format(alignments[1], len(seq2), align_length, ',BANDED' if banded else '')
 ###################################################################################################					
 		
 		return {'align_cost':score, 'seqi_first100':alignment1, 'seqj_first100':alignment2}
